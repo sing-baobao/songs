@@ -1,16 +1,115 @@
 ---
+import Layout from '../layouts/Layout.astro';
+import videos from '../data/videos.json';
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Layout title="Singbaobao Youtube Channel" description="Browse all latest videos from my YouTube channel.">
+  <div class="page-header">
+    <h1>Channel Videos</h1>
+    <p class="subtitle">Latest uploads and walkthroughs.</p>
+  </div>
+
+  <div class="video-grid">
+    {videos.map((video) => (
+      <article class="video-card">
+        <div class="thumbnail-container">
+          <iframe
+            src={`https://www.youtube-nocookie.com/embed/${video.id}`}
+            title={video.title}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+            loading="lazy"
+          ></iframe>
+        </div>
+        <div class="video-info">
+          <h2>
+            <a href={`https://www.youtube.com/watch?v=${video.id}`} target="_blank" rel="noopener noreferrer">
+              {video.title}
+            </a>
+          </h2>
+          <time datetime={video.publishedAt}>Published on {video.publishedAt}</time>
+        </div>
+      </article>
+    ))}
+  </div>
+</Layout>
+
+<style>
+  .page-header {
+    margin-bottom: 2.5rem;
+  }
+
+  .page-header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  .subtitle {
+    color: var(--text-muted);
+  }
+
+  .video-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2rem;
+  }
+
+  .video-card {
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+
+  .video-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--text-muted);
+  }
+
+  .thumbnail-container {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%; /* 16:9 Aspect Ratio */
+    background-color: #000;
+  }
+
+  .thumbnail-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  .video-info {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    flex: 1;
+  }
+
+  .video-info h2 {
+    font-size: 1.05rem;
+    line-height: 1.4;
+  }
+
+  .video-info h2 a {
+    color: var(--text-color);
+    text-decoration: none;
+  }
+
+  .video-info h2 a:hover {
+    color: var(--accent-color);
+  }
+
+  .video-info time {
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+  }
+</style>
